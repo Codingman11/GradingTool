@@ -34,9 +34,11 @@ def dir_callback_exam(sender, app_data, user_data):
         user_data.append(file)
     return user_data
 
+def add_value(sender, app_data, user_data):
+    print(f"Sender: {sender} app_data: {app_data} user data: {user_data}")
+    
 
-
-def initiate_problem_list(sender, app_data, user_data):
+def initiate_problem_list():
     
     try:
         with open("Problem_list.json", "r", encoding="utf-8") as file:
@@ -47,8 +49,19 @@ def initiate_problem_list(sender, app_data, user_data):
 
     
     categ = errorsList["violations"][0]["category"]
-    
-    
+    c = Category()
+    c.category = categ
+    c.category_sum = 2
+
+    categoryList = []
+    for i in errorsList["violations"]:
+        if (i["category"] not in categoryList):
+            categoryList.append(i["category"])
+
+    for i in categoryList:
+        print(i)
     
     for error in errorsList["violations"]:
-        pass
+        
+        if categ != error[""]:
+            pass

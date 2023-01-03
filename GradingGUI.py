@@ -23,7 +23,7 @@ student_list = dpg.generate_uuid()
 file_director = dpg.generate_uuid()
 error_list_window = dpg.generate_uuid()
 
-
+gui.initiate_problem_list()
 
 dpg.add_window(label="Opiskelijat", tag=left_window,
                 menubar=False, no_close=True, horizontal_scrollbar=True)
@@ -34,7 +34,7 @@ dpg.add_window(label="Arviointitaulukko", tag=right_window,
 dpg.add_window(label="Toiminnot", tag=bottom_window,
                 menubar=False, no_close=True, no_move=True)
 dpg.add_window(label="Virheet", tag=center_window,
-                menubar=False, no_close=True, no_move=True)
+                menubar=False, no_close=True, no_move=True, autosize=True)
 
 dpg.add_group(tag=activities, horizontal=True,
                 parent=bottom_window, track_offset=0.5)
@@ -51,19 +51,56 @@ studentList = []
 dpg.add_listbox(items=[], parent=student_list, width=300, num_items=100, tag="Test")
 dpg.add_file_dialog(label="Valitse kansio", directory_selector=True, show=True, tag=file_director, width=700, height=400, callback=gui.dir_callback_exam, user_data=studentList)
 
-with dpg.group(tag=error_list_window, parent=center_window):
-    #with dpg.collapsing_header(label="Toiminnallisuudet", default_open=True, parent=error_list_window, tag ="header_1"):
-        with dpg.tree_node(label= "Tree node 1", default_open=True, tag = "Tree_Node"):
-            with dpg.group(parent="Tree_Node", horizontal=True):
-                dpg.add_text(default_value="Test")
-                width= 400
-                dpg.add_spacer(width=width*1.33)
-                dpg.add_button(label="+")
-                dpg.add_spacer(width=10)
-                dpg.add_text(default_value="0")
-                dpg.add_spacer(width=10)
-                dpg.add_button(label="-")
+category_texts = [
+                "toiminnallisuus tehtäväksiannon mukaan ja CodeGradesta läpi",
+                "tiedostorakenne useita tiedostoja",
+                "ohjeiden mukaiset alkukommentit",
+                "ohjelmarakenne pääohjelma ja aliohjelmat",
+                "perusoperaatiot tulostus, syöte, valintarakenne, toistorakenne",
+                "tiedonvälitys parametrit ja paluuarvot, ei globaaleja muuttujia",
+                "tiedostonkäsittely luku ja kirjoittaminen",
+                "tietorakenteet lista, luokka ja olio",
+                "poikkeustenkäsittely tiedostonkäsittelyssä",
+                "analyysien toteutus",
+                "toteutuksen selkeys, ymmärrettävä, ylläpidettävä ja laajennettava",
+            ]
+error_list = []
 
+for i in range(0, 11):
+    error_list.append("import ei ole päätasolla, vaan sisennettynä aliohjelman/luokan sisään.")
+with dpg.group(tag=error_list_window, parent=center_window):
+    i = 0    
+    j= 0
+    for category in category_texts:      
+        dpg.add_collapsing_header(label=category, default_open=False, parent=error_list_window, tag="header_" + str(i))
+            #with dpg.tree_node(label= "Tree node 1", default_open=True, tag = "Tree_Node"):
+        
+      
+            
+        with dpg.group(horizontal=True, parent="header_" + str(i)):
+            dpg.add_text(default_value=error_list[i])
+            dpg.add_spacer()
+            dpg.add_button(label="+", callback=gui.add_value, tag="button" + str(i))
+            dpg.add_spacer()
+            dpg.add_text(default_value="0", tag="value"+str(i))
+            dpg.add_spacer()
+            dpg.add_button(label="-")
+             
+        i += 1
+    # with dpg.table(header_row=True):
+    #     dpg.add_table_column(label="Virheet")
+    #     dpg.add_table_column(label="Määrä")
+  
+
+    #     for i in range(0,4):
+    #         with dpg.table_row():
+    #             for j in range(0, 2):
+    #                 dpg.add_button(label="+")
+    #                 dpg.add_spacer()
+    #                 dpg.add_text(amount)
+    #                 dpg.add_spacer()
+    #                 dpg.add_button(label="-")
+                    
 
 
     
@@ -78,7 +115,9 @@ with dpg.group(tag=error_list_window, parent=center_window):
 
 dpg.show_viewport(maximized=True)
 
-#dpg.show_item_registry()
+dpg.show_item_registry()
+# dpg.show_item_debug(38)
+
 while dpg.is_dearpygui_running():
     dpg.render_dearpygui_frame()
     if (studentList != []):
